@@ -217,8 +217,8 @@ let timerState = 'idle';
 
 document.addEventListener('DOMContentLoaded', () => {
     renderMenu();
-renderAllQuestions()；
-updateStats()；
+    renderAllQuestions();
+    updateStats();
 });
 
 // 视图切换
@@ -280,10 +280,10 @@ function renderAllQuestions() {
     let html = '';
     let currentCh = 0;
     
-questions.forEach(q=>{
-if(q.ch！==当前Ch){
-currentCh=q.ch；
-HTML+='<h2style="color：#2c3e50；border-bottom:2px solid#3498db；padding-bottom:10px；">${currentCh}.${chapters[currentCh-1]}</h2>'；
+    questions.forEach(q => {
+        if(q.ch !== currentCh) {
+            currentCh = q.ch;
+            html += `<h2 style="color:#2c3e50; border-bottom:2px solid #3498db; padding-bottom:10px;">${currentCh}. ${chapters[currentCh-1]}</h2>`;
         }
         html += renderQuestionCard(q);
     });
@@ -292,139 +292,139 @@ HTML+='<h2style="color：#2c3e50；border-bottom:2px solid#3498db；padding-bott
         html = '<div class="empty-msg">暂无题目数据，请在JS中补充 questions 数组。</div>';
     }
     allList.innerHTML = html;
-if(window.MathJax)MathJax.typesetPromise()；
+    if(window.MathJax) MathJax.typesetPromise();
 }
 
 // 答题逻辑
-功能检查答案(el，qid，correctAns){
-const card=document.getElementById('q-card-'+qid)；
-Const opts=card.querySelectorAll('.opt')；
-const selected=el.getAttribute('data-val')；
+function checkAnswer(el, qid, correctAns) {
+    const card = document.getElementById('q-card-' + qid);
+    const opts = card.querySelectorAll('.opt');
+    const selected = el.getAttribute('data-val');
     
-opts.forEach(o=>o.classList.add('disabled'))；
+    opts.forEach(o => o.classList.add('disabled'));
     
-const fb=document.getElementById('FB-'+qid)；
-Const ansBox=document.getElementById('ans-'+qid)；
+    const fb = document.getElementById('fb-' + qid);
+    const ansBox = document.getElementById('ans-' + qid);
     
-if(选择===正确Ans){
-el.classList.add('correct')；
-fb.innerHTML='🎉 回答正确！'；
-fb.className='反馈显示正确-fb'；
-}else{
-el.classList.add('错误')；
-opts.forEach(o=>{if(o.getAttribute('data-val')===correctAns)o.classList.add('correct')；})；
-fb.innerHTML='❌ 回答错误，正确答案是'+correctAns；
-fb.className='反馈显示错误-fb'；
-saveWrong(qid)；
+    if(selected === correctAns) {
+        el.classList.add('correct');
+        fb.innerHTML = '🎉 回答正确！';
+        fb.className = 'feedback show correct-fb';
+    } else {
+        el.classList.add('wrong');
+        opts.forEach(o => { if(o.getAttribute('data-val') === correctAns) o.classList.add('correct'); });
+        fb.innerHTML = '❌ 回答错误，正确答案是 ' + correctAns;
+        fb.className = 'feedback show wrong-fb';
+        saveWrong(qid);
     }
-ansBox.classList.add('show')；
-updateStats()；
+    ansBox.classList.add('show');
+    updateStats();
 }
 
-//=================4.错题本逻辑=================
-函数saveWrong(qid){
-让错误=JSON.Parse(localStorage.getitem('math_recurs_v2')||'{}')；
-if(错误[qid]){
-错误[qid].count++；
-错误[qid].Time=Date.now()；
-} 其他 {
-错误[qid]={count:1，time:Date.now()}；
+// ================= 4. 错题本逻辑 =================
+function saveWrong(qid) {
+    let wrongs = JSON.parse(localStorage.getItem('math_wrongs_v2') || '{}');
+    if(wrongs[qid]) {
+        wrongs[qid].count++;
+        wrongs[qid].time = Date.now();
+    } else {
+        wrongs[qid] = { count: 1, time: Date.now() };
     }
-localStorage。setitem('math_recurs_v2'，JSON.Stringify(错误))；
+    localStorage.setItem('math_wrongs_v2', JSON.stringify(wrongs));
 }
 
-功能filterWrong(filter，btnEl){
-文件.querySelectorAll('.wf-btn')。foreach(b=>b.classList.移除('active'))；
-如果(btnEl)btnEl.classList。添加(“活动”)；
+function filterWrong(filter, btnEl) {
+    document.querySelectorAll('.wf-btn').forEach(b => b.classList.remove('active'));
+    if(btnEl) btnEl.classList.add('active');
 
-Const错误=JSON.解析(localStorage.getitem('math_recurs_v2')||'{}')；
-Const错误列表=文件.getElementById('错误列表')；
-    让 超文本标记语言='';
-让count=0；
+    const wrongs = JSON.parse(localStorage.getItem('math_wrongs_v2') || '{}');
+    const wrongList = document.getElementById('wrong-list');
+    let html = '';
+    let count = 0;
 
-Const now=Date.now()；
-Const SevenDays=7*24*3600*1000；
+    const now = Date.now();
+    const sevenDays = 7 * 24 * 3600 * 1000;
 
-for(让qid在……内错误){
-Const item=错误[qid]；
-Const qData=问题.find(q=>q.id==qid)；
-如果(！qData)继续；
+    for(let qid in wrongs) {
+        const item = wrongs[qid];
+        const qData = questions.find(q => q.id == qid);
+        if(!qData) continue;
 
-如果(筛选==='周'&&(现在-item.time>SevenDays))继续；
-如果(filter==='high'&&item.count<2)continue；
+        if(filter === 'week' && (now - item.time > sevenDays)) continue;
+        if(filter === 'high' && item.count < 2) continue;
 
-数数++；
-超文本标记语言+='<div class="card">
-<div style="color：#e74c3c；font-weight:bold；margin-bottom:10px；">错误${item。count}次|第${qData.Ch}章${chapters[qData.Ch-1]}</div>
-<div class="q-title">${qid}.${qData.q}</div>
-<div class="答录机show"style="display:block；">
-<b>正确答案：</b>${qData.ans}<br>
-<b>解析：</b>${qData.ana}
-</div>
-</div>'；
+        count++;
+        html += `<div class="card">
+                    <div style="color:#e74c3c; font-weight:bold; margin-bottom:10px;">错 ${item.count} 次 | 第${qData.ch}章 ${chapters[qData.ch-1]}</div>
+                    <div class="q-title">${qid}. ${qData.q}</div>
+                    <div class="answer-box show" style="display:block;">
+                        <b>正确答案：</b>${qData.ans}<br>
+                        <b>解析：</b>${qData.ana}
+                    </div>
+                 </div>`;
     }
 
-如果(count===0)超文本标记语言='<div class="empty-msg">🎉 太棒了，该分类下暂无错题！</div>'；
-errorList.innerHTML=超文本标记语言；
-如果(window.MathJax)MathJax.typesetPromise()；
+    if(count === 0) html = '<div class="empty-msg">🎉 太棒了，该分类下暂无错题！</div>';
+    wrongList.innerHTML = html;
+    if(window.MathJax) MathJax.typesetPromise();
 }
 
-功能clearWrongs(){
-如果(确认('确定要清空所有错题记录吗？ ')){
-localStorage.removeItem('math_recurs_v2')；
-filterWrong('all'，文件.querySelector('.wf-btn[data-filter="all"]'))；
-updateStats()；
+function clearWrongs() {
+    if(confirm('确定要清空所有错题记录吗？')) {
+        localStorage.removeItem('math_wrongs_v2');
+        filterWrong('all', document.querySelector('.wf-btn[data-filter="all"]'));
+        updateStats();
     }
 }
 
-//=================5.统计逻辑=================
-功能updateStats(){
-Const全部的=问题.长度；
-Const错误=JSON.解析(localStorage.getitem('math_recurs_v2')||'{}')；
-Const错误计数=对象.键(错误).长度；
-Const doneCount=文件.querySelectorAll('.opt.disabled')。长度/4；
+// ================= 5. 统计逻辑 =================
+function updateStats() {
+    const total = questions.length;
+    const wrongs = JSON.parse(localStorage.getItem('math_wrongs_v2') || '{}');
+    const wrongCount = Object.keys(wrongs).length;
+    const doneCount = document.querySelectorAll('.opt.disabled').length / 4; 
     
-文件.getElementById('统计总计').内部文本=全部的；
-文件.getElementById('stat-done')。内部文本=数学.地板(doneCount)；
-文件.getElementById('stat-wrong')。内部文本=错误计数；
+    document.getElementById('stat-total').innerText = total;
+    document.getElementById('stat-done').innerText = Math.floor(doneCount);
+    document.getElementById('stat-wrong').innerText = wrongCount;
     
-Const比率=doneCount>0？数学.圆的(((doneCount-错误计数)/doneCount)*100)：0；
-文件.getElementById('stat-rate')。内部文本=数学.最大值(0，比率)+'%'；
+    const rate = doneCount > 0 ? Math.round(((doneCount - wrongCount) / doneCount) * 100) : 0;
+    document.getElementById('stat-rate').innerText = Math.max(0, rate) + '%';
 }
 
-//=================6.计时器逻辑(完美状态机)=================
-//=================6.计时器逻辑(完美状态机)=================
-Const timeDisplay=绝妙的.querySelector('.Time')；
-ConstatusDisplay=绝妙的.querySelector('.status')；
+// ================= 6. 计时器逻辑 (完美状态机) =================
+const fab = document.getElementById('fab-timer');
+const timeDisplay = fab.querySelector('.time');
+const statusDisplay = fab.querySelector('.status');
 
-功能handleTimerClick(){
-如果(timerState==='闲置'){
-timerState='正在运行'；
-绝妙的.classList。添加('正在运行')；
-statusDisplay。内部文本='计时中'；
-timerInterval=setInterval(()=>{
-totalSeconds++；totalSeconds++；
-updateTimerDisplay()；updateTimerDisplay()；
-}, 1000);}, 1000);
-}其他如果(timerState==='正在运行'){}其他如果(timerState==='正在运行'){
-timerState='暂停'；timerState='暂停'；
-clearInterval(timerInterval)；clearInterval(timerInterval)；
-绝妙的.classList。移除('正在运行')；fab.classList。移除('正在运行')；
-statusDisplay。内部文本='已暂停'；statusDisplay。内部文本='已暂停'；
-}其他如果(timerState==='暂停'){}其他如果(timerState==='暂停'){
-timerState='闲置'；timerState='闲置'；
-clearInterval(timerInterval)；clearInterval(timerInterval)；
-totalSeconds=0；totalSeconds=0；
-updateTimerDisplay()；updateTimerDisplay()；
-statusDisplay。内部文本='点击开始'；statusDisplay。内部文本='点击开始'；
-}}
+function handleTimerClick() {
+    if(timerState === 'idle') {
+        timerState = 'running';
+        fab.classList.add('running');
+        statusDisplay.innerText = '计时中';
+        timerInterval = setInterval(() => {
+            totalSeconds++;
+            updateTimerDisplay();
+        }, 1000);
+    } else if(timerState === 'running') {
+        timerState = 'paused';
+        clearInterval(timerInterval);
+        fab.classList.remove('running');
+        statusDisplay.innerText = '已暂停';
+    } else if(timerState === 'paused') {
+        timerState = 'idle';
+        clearInterval(timerInterval); 
+        totalSeconds = 0;             
+        updateTimerDisplay();         
+        statusDisplay.innerText = '点击开始';
+    }
 }
 
-函数updateTimerDisplay(){updateTimerDisplay(){
-设米=数学下限(总计秒/60)；让米=数学.底板(总计秒/60)；
-设s=totalSeconds%60；让s=totalSeconds%60；
-timeDisplay。内部文本='${String(m).PadStart(2，"0")}：${String(s)。PadStart(2，"0")}'；timeDisplay。内部文本=‘${线(米).padStart(2，"0")}：${行。padStart(2，"0")}'；
+function updateTimerDisplay() {
+    let m = Math.floor(totalSeconds / 60);
+    let s = totalSeconds % 60;
+    timeDisplay.innerText = `${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`;
 }
-</剧本>/剧本>
-</身体>/身体>
-</超文本标记语言>/超文本标记语言>
+</script>
+</body>
+</html>
