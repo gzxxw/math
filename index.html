@@ -77,6 +77,73 @@
     </style>
 </head>
 <body>
+    <!-- 提示框 -->
+    <div id="toast" class="toast"></div>
+    
+    <!-- 顶部导航 -->
+    <div class="top-nav">
+        <button id="btn-menu" class="active" onclick="showView('menu')">📑 目录</button>
+        <button id="btn-all" onclick="showView('all')">📝 全部</button>
+        <button id="btn-wrong" onclick="showView('wrong')">❌ 错题</button>
+        <button id="btn-stats" onclick="showView('stats')">📊 统计</button>
+        <button id="btn-code" onclick="showView('code')">🔑 恢复码</button>
+    </div>
+    
+    <!-- 目录视图 -->
+    <div id="view-menu" class="view active">
+        <h2 class="menu-title">📚 选择章节开始刷题</h2>
+        <div id="menu-list"></div>
+    </div>
+    
+    <!-- 全部题目视图 -->
+    <div id="view-all" class="view">
+        <div id="all-list"></div>
+    </div>
+    
+    <!-- 错题视图 -->
+    <div id="view-wrong" class="view">
+        <div class="wrong-filter">
+            <button class="wf-btn active" data-filter="all" onclick="filterWrong('all', this)">全部错题</button>
+            <button class="wf-btn" data-filter="week" onclick="filterWrong('week', this)">近7天</button>
+            <button class="wf-btn" data-filter="high" onclick="filterWrong('high', this)">高频错题</button>
+            <button class="clear-btn" onclick="clearWrongs()">🗑️ 清空</button>
+        </div>
+        <div id="wrong-list"></div>
+    </div>
+    
+    <!-- 统计视图 -->
+    <div id="view-stats" class="view">
+        <h2 class="menu-title">📊 刷题数据统计</h2>
+        <div class="stats-bar">
+            <div class="stats-item"><div class="num" id="stat-total">0</div><div class="label">总题数</div></div>
+            <div class="stats-item"><div class="num" id="stat-done">0</div><div class="label">已完成</div></div>
+            <div class="stats-item"><div class="num" id="stat-wrong">0</div><div class="label">错题数</div></div>
+            <div class="stats-item"><div class="num" id="stat-rate">0%</div><div class="label">正确率</div></div>
+        </div>
+        <div class="daily-stats" id="daily-stats-container">
+            <h3>📅 每日做题记录</h3>
+            <div id="daily-stats-content">暂无数据</div>
+        </div>
+    </div>
+    
+    <!-- 恢复码视图 -->
+    <div id="view-code" class="view">
+        <h2 class="menu-title">🔑 做题记录恢复码</h2>
+        <div class="code-section">
+            <p>关闭页面时自动生成恢复码，粘贴到新设备即可同步所有记录</p>
+            <textarea id="code-input" placeholder="在此粘贴恢复码..."></textarea>
+            <br>
+            <button onclick="importFromCode()">📥 导入记录</button>
+            <button class="secondary" onclick="generateAndCopyCode()">📋 生成并复制当前恢复码</button>
+        </div>
+    </div>
+    
+    <!-- 悬浮计时器 -->
+    <div id="fab-timer" class="fab-timer" onclick="handleTimerClick()">
+        <div class="icon">⏱️</div>
+        <div class="time">00:00</div>
+        <div class="status">点击开始</div>
+    </div>
     <script>
 // ================= 1. 基础数据（200章+50道题，可根据需要补充） =================
 // 章节列表（200章，这里先列前10章，你可以后续补充剩下的190章）
@@ -240,7 +307,7 @@ function showToast(message) {
     setTimeout(() => toast.classList.remove("show"), 3000);
 }
 </script>
-    <script>
+<script>
 // ================= 4. 视图切换逻辑 =================
 function showView(viewId) {
     // 隐藏所有视图
@@ -308,7 +375,6 @@ function renderChapter(chId) {
     allList.innerHTML = html;
     
     showView("all");
-    // 重新渲染数学公式（如果后续加了MathJax，这里需要调用MathJax.typeset()）
 }
 
 // 渲染题目卡片（显示完成状态）
@@ -435,76 +501,7 @@ function updateTimerDisplay() {
     timeDisplay.innerText = `${String(m).padStart(2, "0")}:${String(s).padStart(2, "0")}`;
 }
 </script>
-
-
-    <!-- 提示框 -->
-    <div id="toast" class="toast"></div>
-    
-    <!-- 顶部导航 -->
-    <div class="top-nav">
-        <button id="btn-menu" class="active" onclick="showView('menu')">📑 目录</button>
-        <button id="btn-all" onclick="showView('all')">📝 全部</button>
-        <button id="btn-wrong" onclick="showView('wrong')">❌ 错题</button>
-        <button id="btn-stats" onclick="showView('stats')">📊 统计</button>
-        <button id="btn-code" onclick="showView('code')">🔑 恢复码</button>
-    </div>
-    
-    <!-- 目录视图 -->
-    <div id="view-menu" class="view active">
-        <h2 class="menu-title">📚 选择章节开始刷题</h2>
-        <div id="menu-list"></div>
-    </div>
-    
-    <!-- 全部题目视图 -->
-    <div id="view-all" class="view">
-        <div id="all-list"></div>
-    </div>
-    
-    <!-- 错题视图 -->
-    <div id="view-wrong" class="view">
-        <div class="wrong-filter">
-            <button class="wf-btn active" data-filter="all" onclick="filterWrong('all', this)">全部错题</button>
-            <button class="wf-btn" data-filter="week" onclick="filterWrong('week', this)">近7天</button>
-            <button class="wf-btn" data-filter="high" onclick="filterWrong('high', this)">高频错题</button>
-            <button class="clear-btn" onclick="clearWrongs()">🗑️ 清空</button>
-        </div>
-        <div id="wrong-list"></div>
-    </div>
-    
-    <!-- 统计视图 -->
-    <div id="view-stats" class="view">
-        <h2 class="menu-title">📊 刷题数据统计</h2>
-        <div class="stats-bar">
-            <div class="stats-item"><div class="num" id="stat-total">0</div><div class="label">总题数</div></div>
-            <div class="stats-item"><div class="num" id="stat-done">0</div><div class="label">已完成</div></div>
-            <div class="stats-item"><div class="num" id="stat-wrong">0</div><div class="label">错题数</div></div>
-            <div class="stats-item"><div class="num" id="stat-rate">0%</div><div class="label">正确率</div></div>
-        </div>
-        <div class="daily-stats" id="daily-stats-container">
-            <h3>📅 每日做题记录</h3>
-            <div id="daily-stats-content">暂无数据</div>
-        </div>
-    </div>
-    
-    <!-- 恢复码视图 -->
-    <div id="view-code" class="view">
-        <h2 class="menu-title">🔑 做题记录恢复码</h2>
-        <div class="code-section">
-            <p>关闭页面时自动生成恢复码，粘贴到新设备即可同步所有记录</p>
-            <textarea id="code-input" placeholder="在此粘贴恢复码..."></textarea>
-            <br>
-            <button onclick="importFromCode()">📥 导入记录</button>
-            <button class="secondary" onclick="generateAndCopyCode()">📋 生成并复制当前恢复码</button>
-        </div>
-    </div>
-    
-    <!-- 悬浮计时器 -->
-    <div id="fab-timer" class="fab-timer" onclick="handleTimerClick()">
-        <div class="icon">⏱️</div>
-        <div class="time">00:00</div>
-        <div class="status">点击开始</div>
-    </div>
-    <script>
+<script>
 // ================= 8. 错题本逻辑 =================
 function filterWrong(filter, btnEl) {
     // 更新筛选按钮高亮
