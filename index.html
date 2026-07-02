@@ -737,5 +737,40 @@ document.addEventListener("DOMContentLoaded", () => {
     });
 });
 </script>
+<script>
+// 全局监听页面内容变化，自动渲染公式（适配单页应用动态加载）
+window.addEventListener('DOMContentLoaded', function() {
+  // 定义渲染函数：检查 MathJax 并执行渲染
+  function renderMathJax() {
+    if (typeof MathJax !== 'undefined' && MathJax.typeset) { // 确保 MathJax 已加载
+      MathJax.typeset(); // 重新扫描并渲染页面公式
+    }
+  }
+
+  // 1. 初始加载时渲染（适配首次进入统计页）
+  renderMathJax();
+
+  // 2. 监听视图切换（适配“目录/全部/错题/统计”切换）
+  const navButtons = document.querySelectorAll('.top-nav button');
+  navButtons.forEach(btn => {
+    btn.addEventListener('click', () => {
+      // 等待视图切换动画完成（约300ms），再渲染公式
+      setTimeout(renderMathJax, 300);
+    });
+  });
+
+  // 3. 监听动态内容更新（适配统计页数据加载）
+  // 若统计页通过 AJAX/Fetch 加载数据，可在数据请求完成后调用 renderMathJax()
+  // 示例：假设统计页有数据加载函数 updateStats()，则在其中调用 renderMathJax()
+  // （根据你的代码，若 updateStats 是全局函数，可直接扩展）
+  if (typeof updateStats === 'function') {
+    const originalUpdateStats = updateStats;
+    updateStats = function() {
+      originalUpdateStats(); // 执行原统计更新逻辑
+      renderMathJax(); // 数据更新后渲染公式
+    };
+  }
+});
+</script>
 </body>
 </html>
