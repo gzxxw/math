@@ -172,17 +172,26 @@ const Auth = {
   // 验证登录
   async login(username, password) {
     try {
+      console.log('[Auth] 尝试登录，用户名:', username, '密码长度:', password.length);
+      
       const decodedUsername = atob(username);
+      console.log('[Auth] 解码后的用户名:', decodedUsername);
+      
       const passwordHash = this.hashPassword(password);
+      console.log('[Auth] 密码MD5:', passwordHash);
+      console.log('[Auth] 预期MD5:', this.passwordHash);
       
       if (decodedUsername === atob(this.username) && passwordHash === this.passwordHash) {
+        console.log('[Auth] 登录成功！');
         this.isLoggedIn = true;
         localStorage.setItem('math_auth_token', Date.now().toString());
         return true;
       }
+      console.log('[Auth] 登录失败：账号或密码不匹配');
       return false;
     } catch (e) {
-      console.error('登录失败:', e);
+      console.error('[Auth] 登录失败:', e);
+      console.error('[Auth] 错误详情:', e.message);
       return false;
     }
   },
