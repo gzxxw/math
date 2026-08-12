@@ -216,7 +216,5 @@ function showGridZen() {
 
 document.addEventListener('DOMContentLoaded', () => {
     // 先检查登录状态
-    Auth.checkAndInit().then(() => {
-        App.init();
-    });
+    Auth.checkAndInit();
   });

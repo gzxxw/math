@@ -1,4 +1,3 @@
-// 简单的 MD5 实现
 function md5(string) {
   function rotateLeft(lValue, iShiftBits) {
     return (lValue<<iShiftBits) | (lValue>>>(32-iShiftBits));
