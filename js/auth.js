@@ -174,14 +174,16 @@ const Auth = {
     try {
       console.log('[Auth] 尝试登录，用户名:', username, '密码长度:', password.length);
       
-      const decodedUsername = atob(username);
-      console.log('[Auth] 解码后的用户名:', decodedUsername);
+      // 将用户输入的用户名转为base64进行比较
+      const encodedUsername = btoa(username);
+      console.log('[Auth] 编码后的用户名:', encodedUsername);
+      console.log('[Auth] 预期编码:', this.username);
       
       const passwordHash = this.hashPassword(password);
       console.log('[Auth] 密码MD5:', passwordHash);
       console.log('[Auth] 预期MD5:', this.passwordHash);
       
-      if (decodedUsername === atob(this.username) && passwordHash === this.passwordHash) {
+      if (encodedUsername === this.username && passwordHash === this.passwordHash) {
         console.log('[Auth] 登录成功！');
         this.isLoggedIn = true;
         localStorage.setItem('math_auth_token', Date.now().toString());
