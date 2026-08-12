@@ -5,7 +5,7 @@
 
 const Auth = {
   // 用户名（base64编码）
-  username: 'MTU5ODQ2NDAyOTdAZTE2My5jb20=',
+  username: 'MTU5ODQ2NDAyOTdAMTYzLmNvbQ==',
   
   // 密码哈希（MD5加密，非明文）
   passwordHash: '0b4111913d181ef6d5c1a93ad777e041',
