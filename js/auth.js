@@ -226,7 +226,7 @@ const Auth = {
     modal.className = 'login-modal';
     modal.innerHTML = `
       <div class="login-box">
-        <h2>🔐 请登录</h2>
+        <h2><svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-0.125em" aria-hidden="true"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg> 请登录</h2>
         <p>本工具仅供个人使用</p>
         <div class="form-group">
           <label>邮箱账号</label>
