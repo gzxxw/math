@@ -43,9 +43,9 @@
   </div>
   <div id="welcome-modal">
     <div class="modal-box">
-      <h2>📚 欢迎使用刷题本</h2>
+      <h2><svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-0.125em" aria-hidden="true"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg> 欢迎使用刷题本</h2>
       <p>您的做题记录会保存在本地，并可同步到云端。</p>
-      <p><small>💡 点击选项即可查看<b>答案与解析</b></small></p>
+      <p><small><svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-0.125em" aria-hidden="true"><path d="M9 18h6"/><path d="M10 22h4"/><path d="M15.09 14c.18-.98.65-1.74 1.41-2.5A4.65 4.65 0 0 0 18 8 6 6 0 0 0 6 8c0 1 .23 2.23 1.5 3.5A4.61 4.61 0 0 1 8.91 14"/></svg> 点击选项即可查看<b>答案与解析</b></small></p>
       <div class="checkbox-row">
         <input type="checkbox" id="dontShowWelcome">
         <label for="dontShowWelcome">不再显示</label>
@@ -58,9 +58,9 @@
   </div>
   <div id="support-modal">
     <div class="modal-box">
-      <h3>💖 支持作者</h3>
-      <a href="https://chat.deepseek.com" target="_blank" class="support-link">🤖 DeepSeek 聊天</a>
-      <a href="https://platform.deepseek.com" target="_blank" class="support-link">💳 DeepSeek 打赏</a>
+      <h3><svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-0.125em" aria-hidden="true"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg> 支持作者</h3>
+      <a href="https://chat.deepseek.com" target="_blank" class="support-link"><svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-0.125em" aria-hidden="true"><rect x="4" y="8" width="16" height="12" rx="2"/><path d="M12 8V4"/><circle cx="12" cy="3" r="1"/><circle cx="9" cy="13" r="1"/><circle cx="15" cy="13" r="1"/><line x1="9" y1="17" x2="15" y2="17"/></svg> DeepSeek 聊天</a>
+      <a href="https://platform.deepseek.com" target="_blank" class="support-link"><svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-0.125em" aria-hidden="true"><rect x="1" y="4" width="22" height="16" rx="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg> DeepSeek 打赏</a>
       <div id="gridzen-placeholder" style="display:none; margin-top:10px;">
         <img src="./js/ui/l.png" alt="GridZen" class="support-img" style="max-width:100%;">
         <p>感谢支持</p>
@@ -70,21 +70,22 @@
   </div>
   <div id="toast" class="toast"></div>
   <nav class="top-nav" id="topNav">
-    <button class="active" data-view="menu">📑 目录</button>
-    <button data-view="all">📝 全部</button>
-    <button data-view="wrong">❌ 错题<span class="badge" id="wrong-badge" style="display:none;">0</span></button>
-    <button data-view="stats">📊 统计</button>
-    <button data-view="settings">⚙️ 设置</button>
+    <button class="active" data-view="menu"><svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-0.125em" aria-hidden="true"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg> 目录</button>
+    <button data-view="all"><svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-0.125em" aria-hidden="true"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg> 全部</button>
+    <button data-view="wrong"><svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-0.125em" aria-hidden="true"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg> 错题<span class="badge" id="wrong-badge" style="display:none;">0</span></button>
+    <button data-view="stats"><svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-0.125em" aria-hidden="true"><line x1="12" y1="20" x2="12" y2="10"/><line x1="18" y1="20" x2="18" y2="4"/><line x1="6" y1="20" x2="6" y2="16"/></svg> 统计</button>
+    <button data-view="settings"><svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-0.125em" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg> 设置</button>
   </nav>
   <main>
     <section id="view-menu" class="view active">
-      <h2 class="menu-title">📚 选择章节开始刷题</h2>
+      <h2 class="menu-title"><svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-0.125em" aria-hidden="true"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg> 选择章节开始刷题</h2>
       <div id="menu-list"></div>
     </section>
     <section id="view-all" class="view">
       <div class="search-bar">
-        <input type="text" id="searchInput" placeholder="🔍 搜索题目...">
-        <button class="btn-random" onclick="QuestionsUI.random()">🎲 随机一题</button>
+        <svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-0.125em" aria-hidden="true"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+        <input type="text" id="searchInput" placeholder="搜索题目...">
+        <button class="btn-random" onclick="QuestionsUI.random()"><svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-0.125em" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><circle cx="15.5" cy="15.5" r="1.5"/><circle cx="15.5" cy="8.5" r="1.5"/><circle cx="8.5" cy="15.5" r="1.5"/></svg> 随机一题</button>
       </div>
       <div id="all-list"></div>
     </section>
@@ -93,12 +94,12 @@
         <button class="wf-btn active" data-filter="all">全部错题</button>
         <button class="wf-btn" data-filter="week">近7天</button>
         <button class="wf-btn" data-filter="high">高频错题</button>
-        <button class="clear-btn" id="clearWrongsBtn">🗑️ 清空</button>
+        <button class="clear-btn" id="clearWrongsBtn"><svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-0.125em" aria-hidden="true"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg> 清空</button>
       </div>
       <div id="wrong-list"></div>
     </section>
     <section id="view-stats" class="view">
-      <h2 class="menu-title">📊 刷题数据统计</h2>
+      <h2 class="menu-title"><svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-0.125em" aria-hidden="true"><line x1="12" y1="20" x2="12" y2="10"/><line x1="18" y1="20" x2="18" y2="4"/><line x1="6" y1="20" x2="6" y2="16"/></svg> 刷题数据统计</h2>
       <div class="stats-bar">
         <div class="stats-item"><div class="num" id="stat-total">0</div><div class="label">总题数</div></div>
         <div class="stats-item"><div class="num" id="stat-done">0</div><div class="label">已完成</div></div>
@@ -106,31 +107,31 @@
         <div class="stats-item"><div class="num" id="stat-rate">0%</div><div class="label">正确率</div></div>
       </div>
       <div class="daily-stats">
-        <h3>📅 每日做题记录</h3>
+        <h3><svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-0.125em" aria-hidden="true"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg> 每日做题记录</h3>
         <div id="daily-stats-content">暂无数据</div>
       </div>
     </section>
     <section id="view-settings" class="view">
-      <h2 class="menu-title">⚙️ 设置</h2>
+      <h2 class="menu-title"><svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-0.125em" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg> 设置</h2>
       <div class="settings-card">
         <div class="setting-item">
-          <span class="setting-label">🌙 夜间模式</span>
+          <span class="setting-label"><svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-0.125em" aria-hidden="true"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg> 夜间模式</span>
           <label class="switch"><input type="checkbox" id="darkModeToggle"><span class="slider"></span></label>
         </div>
         <div class="setting-item">
-          <span class="setting-label">🔊 音效音量</span>
+          <span class="setting-label"><svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-0.125em" aria-hidden="true"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 0 1 0 7.07"/></svg> 音效音量</span>
           <input type="range" id="soundVolumeSlider" min="0" max="100" value="80" class="volume-slider">
           <span id="soundVolumeLabel">80%</span>
         </div>
         <div class="setting-item">
-          <span class="setting-label">🎵 背景音乐音量</span>
+          <span class="setting-label"><svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-0.125em" aria-hidden="true"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></svg> 背景音乐音量</span>
           <input type="range" id="bgmVolumeSlider" min="0" max="100" value="50" class="volume-slider">
           <span id="bgmVolumeLabel">50%</span>
         </div>
-        <div class="setting-item"><span class="setting-label">🔊 答对音效</span><input type="file" id="correctSoundFile" accept="audio/*"><span class="file-status" id="correctSoundStatus">未选择</span></div>
-        <div class="setting-item"><span class="setting-label">🔊 答错音效</span><input type="file" id="wrongSoundFile" accept="audio/*"><span class="file-status" id="wrongSoundStatus">未选择</span></div>
+        <div class="setting-item"><span class="setting-label"><svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-0.125em" aria-hidden="true"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 0 1 0 7.07"/></svg> 答对音效</span><input type="file" id="correctSoundFile" accept="audio/*"><span class="file-status" id="correctSoundStatus">未选择</span></div>
+        <div class="setting-item"><span class="setting-label"><svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-0.125em" aria-hidden="true"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 0 1 0 7.07"/></svg> 答错音效</span><input type="file" id="wrongSoundFile" accept="audio/*"><span class="file-status" id="wrongSoundStatus">未选择</span></div>
         <div class="setting-item">
-          <span class="setting-label">🎵 背景音乐</span>
+          <span class="setting-label"><svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-0.125em" aria-hidden="true"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></svg> 背景音乐</span>
           <select id="bgmSelect">
             <option value="off">关闭</option>
             <option value="url">在线 URL</option>
@@ -148,38 +149,38 @@
           <span class="file-status" id="bgmFileStatus">未选择</span>
         </div>
         <div class="setting-item" style="border-bottom:1px solid var(--divider); padding-bottom:12px;">
-          <span class="setting-label">🗣️ 语音反馈</span>
+          <span class="setting-label"><svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-0.125em" aria-hidden="true"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg> 语音反馈</span>
           <label class="switch"><input type="checkbox" id="voiceToggle" checked><span class="slider"></span></label>
         </div>
         <div class="setting-item" style="flex-direction:column; align-items:stretch; border-bottom:1px solid var(--divider); padding-bottom:15px;">
-          <span class="setting-label" style="margin-bottom:8px;">☁️ 云端同步</span>
+          <span class="setting-label" style="margin-bottom:8px;"><svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-0.125em" aria-hidden="true"><path d="M18 10h-1.26A8 8 0 1 0 9 20h9a5 5 0 0 0 0-10z"/></svg> 云端同步</span>
           <div style="display:flex; gap:8px; flex-wrap:wrap;">
-            <button class="small-btn" id="syncCloudBtn" style="background:#28a745;">📤 同步到云端</button>
-            <button class="small-btn" id="loadCloudBtn" style="background:#17a2b8;">📥 从云端读取</button>
+            <button class="small-btn" id="syncCloudBtn" style="background:#28a745;"><svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-0.125em" aria-hidden="true"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg> 同步到云端</button>
+            <button class="small-btn" id="loadCloudBtn" style="background:#17a2b8;"><svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-0.125em" aria-hidden="true"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg> 从云端读取</button>
           </div>
           <div style="font-size:12px; color:#888; margin-top:8px;">使用 GitHub Gist 免费存储，自动同步</div>
         </div>
         <div class="setting-item" style="flex-direction:column; align-items:stretch; border-bottom:1px solid var(--divider); padding-bottom:15px;">
-          <span class="setting-label" style="margin-bottom:8px;">📤 导出 JSON 备份</span>
+          <span class="setting-label" style="margin-bottom:8px;"><svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-0.125em" aria-hidden="true"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg> 导出 JSON 备份</span>
           <button class="small-btn" id="exportJsonBtn">导出数据</button>
         </div>
         <div class="setting-item" style="flex-direction:column; align-items:stretch; border-bottom:1px solid var(--divider); padding-bottom:15px;">
-          <span class="setting-label" style="margin-bottom:8px;">🔑 恢复码</span>
+          <span class="setting-label" style="margin-bottom:8px;"><svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-0.125em" aria-hidden="true"><path d="M21 2l-2 2m-7.61 7.61a5.5 5.5 0 1 1-7.778 7.778 5.5 5.5 0 0 1 7.777-7.777zm0 0L15.5 7.5m0 0l3 3L22 7l-3-3m-3.5 3.5L19 4"/></svg> 恢复码</span>
           <textarea id="code-input" placeholder="在此粘贴恢复码..." style="width:100%; height:60px; padding:10px; border-radius:5px; border:2px solid var(--input-border); background:var(--input-bg); color:var(--text); font-family:monospace;"></textarea>
           <div style="display:flex; gap:8px; margin-top:8px;">
-            <button class="small-btn" id="importCodeBtn">📥 导入</button>
-            <button class="small-btn secondary" id="exportCodeBtn">📋 生成并复制</button>
+            <button class="small-btn" id="importCodeBtn"><svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-0.125em" aria-hidden="true"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg> 导入</button>
+            <button class="small-btn secondary" id="exportCodeBtn"><svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-0.125em" aria-hidden="true"><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><rect x="8" y="2" width="8" height="4" rx="1"/></svg> 生成并复制</button>
           </div>
         </div>
         <div class="setting-item" style="border-bottom:1px solid var(--divider); padding-bottom:12px;">
-          <span class="setting-label">📧 联系我们</span>
+          <span class="setting-label"><svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-0.125em" aria-hidden="true"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg> 联系我们</span>
           <a href="mailto:lzy45400@gmail.com" style="color:var(--accent);">lzy45400@gmail.com</a>
         </div>
       </div>
     </section>
   </main>
   <div id="fab-timer" class="fab-timer" title="单击：开始/暂停">
-    <div style="font-size:16px;">⏱️</div>
+    <div style="font-size:16px;"><svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-0.125em" aria-hidden="true"><circle cx="12" cy="13" r="8"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg></div>
     <div class="time" id="timerDisplay">00:00</div>
     <div class="status" id="timerStatus">待命</div>
   </div>
