@@ -14,9 +14,9 @@ const Timer = {
         App.exportJsonData();
         const code = Storage.generateRecoveryCode();
         navigator.clipboard.writeText(code).then(() => {
-          Utils.showToast('📤 已导出JSON并复制恢复码');
+          Utils.showToast('已导出JSON并复制恢复码');
         }).catch(() => {
-          Utils.showToast('📤 已导出JSON（恢复码请手动复制）');
+          Utils.showToast('已导出JSON（恢复码请手动复制）');
         });
       }, 2000);
     });
