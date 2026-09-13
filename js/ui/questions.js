@@ -13,7 +13,7 @@ const QuestionsUI = {
       <div class="q-title">${q.id}. ${Utils.escapeHtml(q.q)}<span class="q-status ${statusClass}">${statusText}</span></div>
       ${optsHtml}
       <div class="feedback" id="fb-${q.id}"></div>
-      <div class="answer-box" id="ans-${q.id}"><b>📖 解析：</b>${Utils.escapeHtml(q.ana)}</div>
+      <div class="answer-box" id="ans-${q.id}"><b><svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-0.125em" aria-hidden="true"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg> 解析：</b>${Utils.escapeHtml(q.ana)}</div>
     </div>`;
   },
 
@@ -30,7 +30,7 @@ const QuestionsUI = {
       }
       html += this.renderCard(q);
     });
-    allList.innerHTML = html || '<div class="empty-msg">📭 未找到匹配的题目</div>';
+    allList.innerHTML = html || '<div class="empty-msg">' + '<svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-0.125em" aria-hidden="true"><path d="M22 12h-6l-2 3h-4l-2-3H2"/><path d="M5.45 5.11L2 12v6a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-6l-3.45-6.89A2 2 0 0 0 16.76 4H7.24a2 2 0 0 0-1.79 1.11z"/></svg>' + ' 未找到匹配的题目</div>';
     setTimeout(() => { MathRender.renderVisible(); MathRender.observe(); }, 300);
   },
 
@@ -64,14 +64,14 @@ const QuestionsUI = {
     this.markAsDone(qid);
     if (selected === correctAns) {
       el.classList.add('correct');
-      fb.textContent = '🎉 回答正确！';
+      fb.innerHTML = '<svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-0.125em" aria-hidden="true"><path d="M5.8 11.3L2 22l10.7-3.79"/><path d="M4 3h.01"/><path d="M22 8h.01"/><path d="M15 2h.01"/><path d="M22 20h.01"/><path d="M22 2l-2.24.75a2.9 2.9 0 0 0-1.96 3.12c.1.76-.05 1.54-.45 2.19l-1.6 2.6"/><path d="M4.9 12.6c-.3-.36-.5-.83-.5-1.35 0-1.2.98-2.18 2.18-2.18.53 0 1 .2 1.35.5"/><path d="M11.4 19.1c.36.3.83.5 1.35.5 1.2 0 2.18-.98 2.18-2.18 0-.53-.2-1-.5-1.35"/><path d="M8 6h.01"/><path d="M16 18h.01"/></svg> 回答正确！';
       fb.className = 'feedback show correct-fb';
       AudioMgr.playCorrect();
       AudioMgr.speak(correctPhrases);
     } else {
       el.classList.add('wrong');
       opts.forEach(o => { if (o.getAttribute('data-val') === correctAns) o.classList.add('correct'); });
-      fb.textContent = '❌ 回答错误，正确答案是 ' + correctAns;
+      fb.innerHTML = '<svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-0.125em" aria-hidden="true"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg> 回答错误，正确答案是 ' + Utils.escapeHtml(correctAns);
       fb.className = 'feedback show wrong-fb';
       AudioMgr.playWrong();
       AudioMgr.speak(wrongPhrases);
@@ -128,7 +128,7 @@ const QuestionsUI = {
       return fullText.includes(query);
     });
     this.renderAll(App.currentFilteredQuestions);
-    Utils.showToast(`🔍 找到 ${App.currentFilteredQuestions.length} 道匹配题目`);
+    Utils.showToast(`找到 ${App.currentFilteredQuestions.length} 道匹配题目`);
   },
 
   random() {
@@ -149,6 +149,6 @@ const QuestionsUI = {
       }
     }, 400);
     const label = undone.length > 0 ? `未完成(${undone.length}道)` : '全部';
-    Utils.showToast(`🎲 随机抽取一题（${label}）`);
+    Utils.showToast(`随机抽取一题（${label}）`);
   }
 };
