@@ -75,8 +75,8 @@ const SettingsUI = {
     const bgmApply = document.getElementById('bgmUrlApply');
     if (bgmApply) bgmApply.addEventListener('click', () => {
       const url = (document.getElementById('bgmUrlInput') || {}).value || '';
-      if (url) { localStorage.setItem('bgmUrl', url); AudioMgr.playBgm(url); Utils.showToast('背景音乐已切换'); }
-      else Utils.showToast('请输入有效的音乐URL');
+      if (url) { localStorage.setItem('bgmUrl', url); AudioMgr.playBgm(url); Utils.showToast('🎵 背景音乐已切换'); }
+      else Utils.showToast('⚠️ 请输入有效的音乐URL');
     });
     const bgmFile = document.getElementById('bgmFileInput');
     if (bgmFile) bgmFile.addEventListener('change', e => { if (e.target.files.length) AudioMgr.handleMusicUpload(e.target.files[0]); });
@@ -109,7 +109,7 @@ const SettingsUI = {
         Sync.debounceSync(data);
         WrongbookUI.updateBadge();
         WrongbookUI.render('all', document.querySelector('.wf-btn[data-filter="all"]'));
-        Utils.showToast('错题记录已清空');
+        Utils.showToast('🗑️ 错题记录已清空');
       }
     });
 
@@ -118,20 +118,20 @@ const SettingsUI = {
     if (syncBtn) syncBtn.addEventListener('click', async () => {
       const token = await Sync.getToken();
       if (!token) {
-        Utils.showToast('请先设置 GitHub Token');
+        Utils.showToast('⚠️ 请先设置 GitHub Token');
         return;
       }
       Utils.showLoading(true, '同步到云端...');
       await Sync.saveToGist();
       Utils.showLoading(false);
-      Utils.showToast('已同步到云端');
+      Utils.showToast('✅ 已同步到云端');
     });
 
     const loadBtn = document.getElementById('loadCloudBtn');
     if (loadBtn) loadBtn.addEventListener('click', async () => {
       const token = await Sync.getToken();
       if (!token) {
-        Utils.showToast('请先设置 GitHub Token');
+        Utils.showToast('⚠️ 请先设置 GitHub Token');
         return;
       }
       Utils.showLoading(true, '从云端读取...');
@@ -152,7 +152,7 @@ const SettingsUI = {
       const code = Sync.generateRecoveryCode();
       const ta = document.getElementById('code-input');
       if (ta) ta.value = code;
-      navigator.clipboard.writeText(code).then(() => Utils.showToast('恢复码已复制')).catch(() => Utils.showToast('复制失败'));
+      navigator.clipboard.writeText(code).then(() => Utils.showToast('📋 恢复码已复制')).catch(() => Utils.showToast('⚠️ 复制失败'));
     });
   }
 };
