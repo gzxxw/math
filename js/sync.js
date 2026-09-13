@@ -23,10 +23,10 @@ const Sync = {
   },
 
   async init() {
-    console.log('📱 使用 Gist 云端同步模式');
+    console.log('使用 Gist 云端同步模式');
     const token = await this.getToken();
     if (!token) {
-      console.log('⚠️ 未检测到 GitHub Token，将仅使用本地存储');
+      console.log('未检测到 GitHub Token，将仅使用本地存储');
       return;
     }
     await this.loadCloudData();
@@ -42,7 +42,7 @@ const Sync = {
       });
       
       if (!res.ok) {
-        console.log('📱 Gist 未找到，将创建新记录');
+        console.log('Gist 未找到，将创建新记录');
         return;
       }
       
@@ -65,7 +65,7 @@ const Sync = {
       Object.assign(local.daily, cloudData.daily || {});
       
       Storage.saveLocalData(local);
-      Utils.showToast('✅ 已从云端同步数据');
+      Utils.showToast('已从云端同步数据');
       App.renderAll();
       
     } catch (e) {
@@ -97,7 +97,7 @@ const Sync = {
       });
 
       if (res.ok) {
-        console.log('✅ 数据已同步到 Gist');
+        console.log('数据已同步到 Gist');
       } else {
         console.warn('同步失败:', res.status);
       }
@@ -133,9 +133,9 @@ const Sync = {
   },
 
   importRecoveryCode(code) {
-    if (!code || !code.includes('::')) { Utils.showToast('❌ 恢复码格式错误'); return false; }
+    if (!code || !code.includes('::')) { Utils.showToast('恢复码格式错误'); return false; }
     const [b64, sum] = code.split('::');
-    if (Utils.checksum(b64) !== sum) { Utils.showToast('❌ 恢复码校验失败'); return false; }
+    if (Utils.checksum(b64) !== sum) { Utils.showToast('恢复码校验失败'); return false; }
     try {
       const compressed = decodeURIComponent(escape(atob(b64)));
       const json = LZString.decompressFromUTF16(compressed);
@@ -164,10 +164,10 @@ const Sync = {
       if (imported.wrongBase64) current.wrongBase64 = imported.wrongBase64;
       Storage.saveLocalData(current);
       this.saveToGist();
-      Utils.showToast('✅ 导入成功并已同步云端');
+      Utils.showToast('导入成功并已同步云端');
       return true;
     } catch (e) {
-      Utils.showToast('❌ 恢复码无效');
+      Utils.showToast('恢复码无效');
       return false;
     }
   },
