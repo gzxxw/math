@@ -5,9 +5,9 @@ const App = {
 
   async init() {
     // 打开页面时自动重新加载题目，但保留本地做题记录
-    console.log('📚 页面初始化，开始加载题目...');
+    console.log('页面初始化，开始加载题目...');
     await this.loadData();
-    console.log('✅ 题目加载完成，共', this.questions.length, '道题');
+    console.log('题目加载完成，共', this.questions.length, '道题');
 
     Timer.init();
 
@@ -56,50 +56,50 @@ const App = {
       const res = await fetch('./data/chapters.json');
       if (res.ok) {
         this.chapters = await res.json();
-        console.log('✅ chapters.json 加载成功，共', this.chapters.length, '个章节');
+        console.log('chapters.json 加载成功，共', this.chapters.length, '个章节');
       } else {
         throw new Error('fetch chapters failed: ' + res.status);
       }
     } catch (e) {
-      console.warn('⚠️ 加载章节失败，使用内置备用数据:', e.message);
+      console.warn('加载章节失败，使用内置备用数据:', e.message);
       this.chapters = FALLBACK_CHAPTERS;
     }
     
     // 加载题目：优先用 questions.json，失败则fallback到config.js内置的QUESTIONS
     try {
       const res = await fetch('./data/questions.json');
-      console.log('📥 尝试加载 questions.json，响应状态:', res.status, 'ok:', res.ok);
+      console.log('尝试加载 questions.json，响应状态:', res.status, 'ok:', res.ok);
       if (res.ok) {
         this.questions = await res.json();
-        console.log('✅ questions.json 加载成功，共', this.questions.length, '道题');
+        console.log('questions.json 加载成功，共', this.questions.length, '道题');
       } else {
         throw new Error('fetch questions failed: ' + res.status);
       }
     } catch (e) {
-      console.warn('❌ questions.json 加载失败，尝试使用内置QUESTIONS:', e.message);
-      console.log('🔍 检查内置QUESTIONS:', typeof QUESTIONS, QUESTIONS);
+      console.warn('questions.json 加载失败，尝试使用内置QUESTIONS:', e.message);
+      console.log('检查内置QUESTIONS:', typeof QUESTIONS, QUESTIONS);
       
       // fallback: 使用 config.js 里内置的 QUESTIONS 数组
       if (typeof QUESTIONS !== 'undefined' && QUESTIONS && Array.isArray(QUESTIONS) && QUESTIONS.length > 0) {
         this.questions = QUESTIONS;
-        console.log('✅ 使用内置QUESTIONS数据，共', this.questions.length, '道题');
-        console.log('📋 第一题:', this.questions[0]);
+        console.log('使用内置QUESTIONS数据，共', this.questions.length, '道题');
+        console.log('第一题:', this.questions[0]);
       } else if (typeof QUESTIONS !== 'undefined' && QUESTIONS && typeof QUESTIONS.length === 'number') {
-        console.warn('⚠️ QUESTIONS存在但长度为0或不是数组');
+        console.warn('QUESTIONS存在但长度为0或不是数组');
         this.questions = [];
       } else {
-        console.error('❌ 内置QUESTIONS未定义或为空');
+        console.error('内置QUESTIONS未定义或为空');
         // 最后尝试使用 FALLBACK_QUESTIONS（如果存在）
         if (typeof FALLBACK_QUESTIONS !== 'undefined' && FALLBACK_QUESTIONS && Array.isArray(FALLBACK_QUESTIONS) && FALLBACK_QUESTIONS.length > 0) {
           this.questions = FALLBACK_QUESTIONS;
-          console.log('✅ 使用FALLBACK_QUESTIONS数据，共', this.questions.length, '道题');
+          console.log('使用FALLBACK_QUESTIONS数据，共', this.questions.length, '道题');
         } else {
           this.questions = [];
         }
       }
     }
     this.currentFilteredQuestions = [...this.questions];
-    console.log('📚 当前题目数量:', this.questions.length);
+    console.log('当前题目数量:', this.questions.length);
   },
 
   showView(viewId) {
@@ -142,7 +142,7 @@ const App = {
     a.download = `刷题备份_${Utils.getTodayKey()}.json`;
     a.click();
     URL.revokeObjectURL(url);
-    Utils.showToast('📤 JSON 备份已导出');
+    Utils.showToast('JSON 备份已导出');
   },
 
   importJsonData(file) {
@@ -172,12 +172,12 @@ const App = {
         if (imported.bgmBase64) { current.bgmBase64 = imported.bgmBase64; AudioMgr.playBgm(imported.bgmBase64); }
         Storage.saveLocalData(current);
         Sync.debounceSync(current);
-        Utils.showToast('✅ JSON 导入成功！');
+        Utils.showToast('JSON 导入成功！');
         this.renderAll();
         Utils.showLoading(false);
       } catch (err) {
         Utils.showLoading(false);
-        Utils.showToast('❌ JSON 文件无效: ' + err.message);
+        Utils.showToast('JSON 文件无效: ' + err.message);
       }
     };
     reader.readAsText(file);
@@ -200,7 +200,7 @@ function rejectWelcome() {
   const box = document.querySelector('#welcome-modal .modal-box');
   if (box) {
     box.innerHTML = `
-      <h2>⚠️ 需要同意才能使用</h2>
+      <h2><svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-0.125em" aria-hidden="true"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg> 需要同意才能使用</h2>
       <p>本工具需要本地存储来保存您的做题记录。刷新页面可重新选择。</p>
       <div class="modal-actions">
         <button class="btn-agree" onclick="location.reload()">刷新并同意</button>
