@@ -75,9 +75,9 @@ const Storage = {
   },
 
   importRecoveryCode(code) {
-    if (!code || !code.includes('::')) { Utils.showToast('❌ 恢复码格式错误'); return false; }
+    if (!code || !code.includes('::')) { Utils.showToast('恢复码格式错误'); return false; }
     const [b64, sum] = code.split('::');
-    if (Utils.checksum(b64) !== sum) { Utils.showToast('❌ 恢复码校验失败，请检查是否复制完整'); return false; }
+    if (Utils.checksum(b64) !== sum) { Utils.showToast('恢复码校验失败，请检查是否复制完整'); return false; }
     try {
       const compressed = decodeURIComponent(escape(atob(b64)));
       const json = LZString.decompressFromUTF16(compressed);
@@ -106,10 +106,10 @@ const Storage = {
       if (imported.wrongBase64) current.wrongBase64 = imported.wrongBase64;
       if (imported.bgmBase64) current.bgmBase64 = imported.bgmBase64;
       this.saveLocalData(current);
-      Utils.showToast('✅ 恢复码导入成功！');
+      Utils.showToast('恢复码导入成功！');
       return true;
     } catch (e) {
-      Utils.showToast('❌ 恢复码无效或已损坏');
+      Utils.showToast('恢复码无效或已损坏');
       return false;
     }
   }
