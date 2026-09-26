@@ -4,16 +4,17 @@ const QuestionsUI = {
     const data = Storage.getData();
     const isDone = data.completed[q.id] || false;
     const statusClass = isDone ? 'done' : 'pending';
-    const statusText = isDone ? '✓ 已完成' : '○ 待完成';
+    const statusIcon = isDone ? Icons.get('check-circle-2', 'sm') : Icons.get('circle', 'sm');
+    const statusText = isDone ? '已完成' : '待完成';
     const optsHtml = q.opts.map((opt, idx) => {
       const val = String.fromCharCode(65 + idx);
       return `<div class="opt" data-qid="${q.id}" data-val="${val}" onclick="QuestionsUI.checkAnswer(this, ${q.id}, '${q.ans}')">${Utils.escapeHtml(opt)}</div>`;
     }).join('');
-    return `<div class="card" id="q-card-${q.id}">
-      <div class="q-title">${q.id}. ${Utils.escapeHtml(q.q)}<span class="q-status ${statusClass}">${statusText}</span></div>
+    return `<div class="card reveal" id="q-card-${q.id}">
+      <div class="q-title"><span class="q-id">${String(q.id).padStart(2, '0')}</span><span style="flex:1;">${Utils.escapeHtml(q.q)}</span><span class="q-status ${statusClass}">${statusIcon}${statusText}</span></div>
       ${optsHtml}
       <div class="feedback" id="fb-${q.id}"></div>
-      <div class="answer-box" id="ans-${q.id}"><b>📖 解析：</b>${Utils.escapeHtml(q.ana)}</div>
+      <div class="answer-box" id="ans-${q.id}"><span class="ans-label">${Icons.get('book-text', 'sm')}解析：</span>${Utils.escapeHtml(q.ana)}</div>
     </div>`;
   },
 
@@ -26,28 +27,28 @@ const QuestionsUI = {
       if (q.ch !== currentCh) {
         currentCh = q.ch;
         const count = qs.filter(x => x.ch === currentCh).length;
-        html += `<h2 class="chapter-header">${currentCh}. ${Utils.escapeHtml(App.chapters[currentCh - 1])} <span class="tag-chapter">${count}题</span></h2>`;
+        html += `<h2 class="chapter-header reveal"><span style="font-family:var(--font-mono);font-size:13px;color:var(--text-tertiary);font-weight:400;">${String(currentCh).padStart(2, '0')}</span>${Utils.escapeHtml(App.chapters[currentCh - 1])} <span class="tag-chapter">${count}题</span></h2>`;
       }
       html += this.renderCard(q);
     });
-    allList.innerHTML = html || '<div class="empty-msg">📭 未找到匹配的题目</div>';
-    setTimeout(() => { MathRender.renderVisible(); MathRender.observe(); }, 300);
+    allList.innerHTML = html || `<div class="empty-msg">${Icons.get('search', 'xl')}<span>未找到匹配的题目</span></div>`;
+    setTimeout(() => { MathRender.renderVisible(); MathRender.observe(); ScrollReveal.init(); }, 300);
   },
 
   renderChapter(chId) {
     const chQuestions = App.questions.filter(q => q.ch === chId);
     if (!chQuestions.length) { Utils.showToast('本章暂无题目'); return; }
-    Utils.showLoading(true, '加载题目...');
+    Utils.showLoading(true, '加载题目…');
     setTimeout(() => {
       App.currentFilteredQuestions = chQuestions;
       const allList = document.getElementById('all-list');
-      let html = `<h2 class="chapter-header">${chId}. ${Utils.escapeHtml(App.chapters[chId - 1])} <span class="tag-chapter">${chQuestions.length}题</span></h2>`;
+      let html = `<h2 class="chapter-header reveal"><span style="font-family:var(--font-mono);font-size:13px;color:var(--text-tertiary);font-weight:400;">${String(chId).padStart(2, '0')}</span>${Utils.escapeHtml(App.chapters[chId - 1])} <span class="tag-chapter">${chQuestions.length}题</span></h2>`;
       html += chQuestions.map(q => this.renderCard(q)).join('');
       allList.innerHTML = html;
       document.getElementById('searchInput').value = '';
       App.showView('all');
       Utils.showLoading(false);
-      setTimeout(() => { MathRender.renderVisible(); MathRender.observe(); }, 300);
+      setTimeout(() => { MathRender.renderVisible(); MathRender.observe(); ScrollReveal.init(); }, 300);
     }, 200);
   },
 
@@ -64,14 +65,14 @@ const QuestionsUI = {
     this.markAsDone(qid);
     if (selected === correctAns) {
       el.classList.add('correct');
-      fb.textContent = '🎉 回答正确！';
+      fb.innerHTML = `${Icons.get('check-circle-2', 'md')}回答正确！`;
       fb.className = 'feedback show correct-fb';
       AudioMgr.playCorrect();
       AudioMgr.speak(correctPhrases);
     } else {
       el.classList.add('wrong');
       opts.forEach(o => { if (o.getAttribute('data-val') === correctAns) o.classList.add('correct'); });
-      fb.textContent = '❌ 回答错误，正确答案是 ' + correctAns;
+      fb.innerHTML = `${Icons.get('x-circle', 'md')}回答错误，正确答案是 ${correctAns}`;
       fb.className = 'feedback show wrong-fb';
       AudioMgr.playWrong();
       AudioMgr.speak(wrongPhrases);
@@ -79,7 +80,7 @@ const QuestionsUI = {
     }
     ansBox.classList.add('show');
     const statusSpan = card.querySelector('.q-status');
-    if (statusSpan) { statusSpan.textContent = '✓ 已完成'; statusSpan.className = 'q-status done'; }
+    if (statusSpan) { statusSpan.innerHTML = Icons.get('check-circle-2', 'sm') + '已完成'; statusSpan.className = 'q-status done'; }
     StatsUI.update();
     WrongbookUI.updateBadge();
     MenuUI.render();
@@ -128,7 +129,7 @@ const QuestionsUI = {
       return fullText.includes(query);
     });
     this.renderAll(App.currentFilteredQuestions);
-    Utils.showToast(`🔍 找到 ${App.currentFilteredQuestions.length} 道匹配题目`);
+    Utils.showToast(`${Icons.get('search', 'sm')} 找到 ${App.currentFilteredQuestions.length} 道匹配题目`);
   },
 
   random() {
@@ -144,11 +145,12 @@ const QuestionsUI = {
       const card = document.getElementById('q-card-' + randomQ.id);
       if (card) {
         card.scrollIntoView({ behavior: 'smooth', block: 'center' });
-        card.style.boxShadow = '0 0 0 4px rgba(52,152,219,0.5)';
-        setTimeout(() => { card.style.boxShadow = ''; }, 2000);
+        card.style.borderColor = 'var(--primary)';
+        card.style.boxShadow = '0 0 0 3px rgba(44,95,78,0.15)';
+        setTimeout(() => { card.style.borderColor = ''; card.style.boxShadow = ''; }, 2000);
       }
     }, 400);
     const label = undone.length > 0 ? `未完成(${undone.length}道)` : '全部';
-    Utils.showToast(`🎲 随机抽取一题（${label}）`);
+    Utils.showToast(`${Icons.get('shuffle', 'sm')} 随机抽取一题（${label}）`);
   }
 };

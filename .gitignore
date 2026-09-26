@@ -1,0 +1,13 @@
+# Dependencies
+node_modules/
+
+# Environment / secrets (NEVER commit)
+.env
+
+# OS / editor
+.DS_Store
+*.swp
+*.swo
+
+# Build artifacts
+dist/
