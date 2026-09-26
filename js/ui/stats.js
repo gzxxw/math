@@ -22,7 +22,7 @@ const StatsUI = {
     if (!container) return;
     const today = Utils.getTodayKey();
     const dates = Object.keys(data.daily).sort().reverse().slice(0, 7);
-    if (!dates.length) { container.innerHTML = '<p class="empty-msg" style="margin-top:20px;">暂无做题记录</p>'; return; }
+    if (!dates.length) { container.innerHTML = '<p class="empty-msg">暂无做题记录</p>'; return; }
     let html = '<table><tr><th>日期</th><th>完成</th><th>错题</th><th>正确率</th><th>涉及章节</th></tr>';
     dates.forEach(date => {
       const day = data.daily[date];
@@ -44,13 +44,12 @@ const StatsUI = {
         for (const ch in chMap) parts.push(`${ch}.${chMap[ch].join(',')}`);
         detail = parts.join('; ');
       }
-      const todayBadge = date === today ? ` <span class="today-badge">${Icons.get('map-pin', 'sm')}今天</span>` : '';
       html += `<tr${isToday}>
-        <td>${date}${todayBadge}</td>
+        <td>${date}${date === today ? ' 📍' : ''}</td>
         <td><strong>${done}</strong></td>
-        <td>${wrong > 0 ? '<span style="color:var(--danger);">'+wrong+'</span>' : '0'}</td>
+        <td>${wrong > 0 ? '<span style="color:#e74c3c;">'+wrong+'</span>' : '0'}</td>
         <td>${rate}%</td>
-        <td style="font-size:11px; max-width:180px; word-break:break-all; color:var(--text-secondary);">${detail || '-'}</td>
+        <td style="font-size:11px; max-width:180px; word-break:break-all;">${detail || '-'}</td>
       </tr>`;
     });
     html += '</table>';

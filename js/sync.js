@@ -1,119 +1,95 @@
 // ============================================================
-//  sync.js  —  Gist 云端同步模块（通过本地代理，token 永不进前端）
-//  前端只调用 /api/gist，token 由服务端 .env 注入
+//  sync.js  —  Gist 云端同步模块
+//  用 GitHub Gist API 存储做题数据，免费无限制
 // ============================================================
 
 const Sync = {
+  gistId: 'gzxxw-math-sync',
+  gistToken: null,
+  client: null,
+  userId: null,
   syncTimeout: null,
-  lastSyncStatus: null,
-  isSyncing: false,
 
-  async init() {
-    console.log('[Sync] 初始化云端同步');
-    try {
-      const health = await fetch('/api/health').then(r => r.json()).catch(() => null);
-      if (!health || !health.ok) {
-        console.warn('[Sync] 代理服务不可用，仅使用本地存储');
-        this.showSyncStatus('warning', '代理服务未运行，云端同步不可用');
-        return;
-      }
-      if (!health.tokenConfigured) {
-        console.warn('[Sync] 服务端未配置 Token');
-        this.showSyncStatus('warning', '服务端未配置 GitHub Token');
-        return;
-      }
-      if (!health.gistConfigured) {
-        console.log('[Sync] Gist 未创建，尝试自动创建');
-        await this.ensureGist();
-      }
-      await this.loadCloudData();
-    } catch (e) {
-      console.warn('[Sync] 初始化失败:', e.message);
+  async getToken() {
+    if (!this.gistToken) {
+      this.gistToken = localStorage.getItem('math_gist_token');
     }
+    return this.gistToken;
   },
 
-  async ensureGist() {
-    try {
-      const res = await fetch('/api/gist/init', { method: 'POST' });
-      const data = await res.json();
-      if (data.ok) {
-        console.log('[Sync] Gist 已就绪:', data.gistId);
-        this.showSyncStatus('ok', '云端已连接');
-      } else {
-        this.showSyncStatus('error', data.message || 'Gist 初始化失败');
-      }
-    } catch (e) {
-      this.showSyncStatus('error', '网络错误，无法连接代理');
+  setToken(token) {
+    this.gistToken = token;
+    localStorage.setItem('math_gist_token', token);
+  },
+
+  async init() {
+    console.log('📱 使用 Gist 云端同步模式');
+    const token = await this.getToken();
+    if (!token) {
+      console.log('⚠️ 未检测到 GitHub Token，将仅使用本地存储');
+      return;
     }
+    await this.loadCloudData();
   },
 
   async loadCloudData() {
+    const token = await this.getToken();
+    if (!token) return;
+
     try {
-      const res = await fetch('/api/gist');
+      const res = await fetch(`https://api.github.com/gists/${this.gistId}`, {
+        headers: { 'Authorization': `Bearer ${token}` }
+      });
+      
       if (!res.ok) {
-        const err = await res.json().catch(() => ({}));
-        if (err.error === 'no_gist' || err.error === 'gist_not_found') {
-          await this.ensureGist();
-          return;
-        }
-        if (err.error === 'invalid_token') {
-          this.showSyncStatus('error', 'GitHub Token 无效或已过期');
-          return;
-        }
-        if (err.error === 'network_error') {
-          this.showSyncStatus('warning', '网络异常，使用本地数据');
-          return;
-        }
-        this.showSyncStatus('warning', err.message || '云端读取失败');
+        console.log('📱 Gist 未找到，将创建新记录');
         return;
       }
-
-      const { files } = await res.json();
-
-      if (files['data.json']) {
-        try {
-          const cloudData = JSON.parse(files['data.json']);
-          const local = Storage.getData();
-
-          Object.assign(local.completed, cloudData.completed || {});
-          for (const qid in cloudData.wrongs || {}) {
-            if (local.wrongs[qid]) {
-              local.wrongs[qid].count = Math.max(local.wrongs[qid].count, cloudData.wrongs[qid].count);
-              local.wrongs[qid].lastTime = Math.max(local.wrongs[qid].lastTime, cloudData.wrongs[qid].lastTime);
-            } else {
-              local.wrongs[qid] = cloudData.wrongs[qid];
-            }
-          }
-          Object.assign(local.daily, cloudData.daily || {});
-
-          if (cloudData.correctBase64) local.correctBase64 = cloudData.correctBase64;
-          if (cloudData.wrongBase64) local.wrongBase64 = cloudData.wrongBase64;
-          if (cloudData.bgmBase64) local.bgmBase64 = cloudData.bgmBase64;
-
-          Storage.saveLocalData(local);
-          this.showSyncStatus('ok', '云端数据已同步');
-          App.renderAll();
-        } catch (e) {
-          console.warn('[Sync] 解析云端数据失败:', e);
+      
+      const data = await res.json();
+      const content = data.files?.['data.json']?.content;
+      if (!content) return;
+      
+      const cloudData = JSON.parse(content);
+      const local = Storage.getData();
+      
+      Object.assign(local.completed, cloudData.completed || {});
+      for (const qid in cloudData.wrongs || {}) {
+        if (local.wrongs[qid]) {
+          local.wrongs[qid].count = Math.max(local.wrongs[qid].count, cloudData.wrongs[qid].count);
+          local.wrongs[qid].lastTime = Math.max(local.wrongs[qid].lastTime, cloudData.wrongs[qid].lastTime);
+        } else {
+          local.wrongs[qid] = cloudData.wrongs[qid];
         }
       }
+      Object.assign(local.daily, cloudData.daily || {});
+      
+      Storage.saveLocalData(local);
+      Utils.showToast('✅ 已从云端同步数据');
+      App.renderAll();
+      
     } catch (e) {
-      console.warn('[Sync] 加载云端数据失败:', e);
-      this.showSyncStatus('warning', '网络异常，使用本地数据');
+      console.warn('加载云端数据失败:', e);
     }
   },
 
   async saveToGist() {
-    if (this.isSyncing) return;
-    this.isSyncing = true;
+    const token = await this.getToken();
+    if (!token) return;
+
     const data = Storage.getData();
     const payload = JSON.stringify(data, null, 2);
 
     try {
-      const res = await fetch('/api/gist', {
+      const res = await fetch(`https://api.github.com/gists/${this.gistId}`, {
         method: 'PATCH',
-        headers: { 'Content-Type': 'application/json' },
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json'
+        },
         body: JSON.stringify({
+          description: '高中数学刷题本数据备份',
+          public: false,
           files: {
             'data.json': { content: payload }
           }
@@ -121,22 +97,12 @@ const Sync = {
       });
 
       if (res.ok) {
-        this.lastSyncStatus = 'ok';
-        this.showSyncStatus('ok', '已保存到云端');
+        console.log('✅ 数据已同步到 Gist');
       } else {
-        const err = await res.json().catch(() => ({}));
-        this.lastSyncStatus = 'error';
-        if (err.error === 'invalid_token') {
-          this.showSyncStatus('error', 'Token 无效，同步失败');
-        } else {
-          this.showSyncStatus('warning', err.message || '同步失败');
-        }
+        console.warn('同步失败:', res.status);
       }
     } catch (e) {
-      this.lastSyncStatus = 'error';
-      this.showSyncStatus('warning', '网络异常，稍后重试');
-    } finally {
-      this.isSyncing = false;
+      console.warn('保存失败:', e);
     }
   },
 
@@ -145,15 +111,8 @@ const Sync = {
     this.syncTimeout = setTimeout(() => this.saveToGist(), 2000);
   },
 
-  showSyncStatus(type, message) {
-    const container = document.getElementById('sync-status-container');
-    if (!container) return;
-    const iconMap = { ok: 'check-circle-2', warning: 'alert-triangle', error: 'alert-circle' };
-    container.innerHTML = `<div class="sync-status ${type}">${Icons.get(iconMap[type] || 'alert-circle', 'sm')}<span>${message}</span></div>`;
-    if (type === 'ok') {
-      clearTimeout(this._statusTimer);
-      this._statusTimer = setTimeout(() => { container.innerHTML = ''; }, 4000);
-    }
+  generateShortCode() {
+    return 'GIST_' + this.gistId.substring(0, 8).toUpperCase();
   },
 
   generateRecoveryCode() {
@@ -174,9 +133,9 @@ const Sync = {
   },
 
   importRecoveryCode(code) {
-    if (!code || !code.includes('::')) { Utils.showToast(`${Icons.get('alert-circle', 'sm')} 恢复码格式错误`); return false; }
+    if (!code || !code.includes('::')) { Utils.showToast('❌ 恢复码格式错误'); return false; }
     const [b64, sum] = code.split('::');
-    if (Utils.checksum(b64) !== sum) { Utils.showToast(`${Icons.get('alert-circle', 'sm')} 恢复码校验失败`); return false; }
+    if (Utils.checksum(b64) !== sum) { Utils.showToast('❌ 恢复码校验失败'); return false; }
     try {
       const compressed = decodeURIComponent(escape(atob(b64)));
       const json = LZString.decompressFromUTF16(compressed);
@@ -204,11 +163,11 @@ const Sync = {
       if (imported.correctBase64) current.correctBase64 = imported.correctBase64;
       if (imported.wrongBase64) current.wrongBase64 = imported.wrongBase64;
       Storage.saveLocalData(current);
-      this.debounceSync(current);
-      Utils.showToast(`${Icons.get('check-circle-2', 'sm')} 导入成功并已同步云端`);
+      this.saveToGist();
+      Utils.showToast('✅ 导入成功并已同步云端');
       return true;
     } catch (e) {
-      Utils.showToast(`${Icons.get('alert-circle', 'sm')} 恢复码无效`);
+      Utils.showToast('❌ 恢复码无效');
       return false;
     }
   },

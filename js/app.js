@@ -2,12 +2,12 @@ const App = {
   questions: [],
   chapters: [],
   currentFilteredQuestions: [],
-  dataSource: 'local', // 'gist' | 'local' | 'fallback'
 
   async init() {
-    console.log('[App] 页面初始化，开始加载题目…');
+    // 打开页面时自动重新加载题目，但保留本地做题记录
+    console.log('📚 页面初始化，开始加载题目...');
     await this.loadData();
-    console.log('[App] 题目加载完成，共', this.questions.length, '道题，来源:', this.dataSource);
+    console.log('✅ 题目加载完成，共', this.questions.length, '道题');
 
     Timer.init();
 
@@ -19,7 +19,7 @@ const App = {
       await AudioMgr.restoreBgm();
       WrongbookUI.updateBadge();
       setTimeout(() => { if (AudioMgr.bgmAudio) AudioMgr.bgmAudio.play().catch(() => {}); }, 500);
-      setTimeout(() => { MathRender.renderVisible(); MathRender.observe(); ScrollReveal.init(); }, 1000);
+      setTimeout(() => { MathRender.renderVisible(); MathRender.observe(); }, 1000);
     } else {
       document.getElementById('welcome-modal').style.display = 'flex';
     }
@@ -51,64 +51,59 @@ const App = {
   },
 
   async loadData() {
-    // 优先从 Gist（通过代理）加载题库
-    let gistOk = false;
+    // 加载章节
     try {
-      const res = await fetch('/api/gist');
+      const res = await fetch('./data/chapters.json');
       if (res.ok) {
-        const { files } = await res.json();
-        if (files['questions.json'] && files['chapters.json']) {
-          const gistQuestions = JSON.parse(files['questions.json']);
-          const gistChapters = JSON.parse(files['chapters.json']);
-          if (Array.isArray(gistQuestions) && gistQuestions.length > 0 && Array.isArray(gistChapters)) {
-            this.questions = gistQuestions;
-            this.chapters = gistChapters;
-            this.dataSource = 'gist';
-            gistOk = true;
-            console.log('[App] 从 Gist 加载题目:', this.questions.length, '道，章节:', this.chapters.length);
-          }
-        }
+        this.chapters = await res.json();
+        console.log('✅ chapters.json 加载成功，共', this.chapters.length, '个章节');
+      } else {
+        throw new Error('fetch chapters failed: ' + res.status);
       }
     } catch (e) {
-      console.warn('[App] Gist 加载失败，尝试本地文件:', e.message);
+      console.warn('⚠️ 加载章节失败，使用内置备用数据:', e.message);
+      this.chapters = FALLBACK_CHAPTERS;
     }
-
-    // 回退：本地 data/ 文件
-    if (!gistOk) {
-      try {
-        const res = await fetch('./data/chapters.json');
-        if (res.ok) {
-          this.chapters = await res.json();
-        } else throw new Error('fetch chapters failed: ' + res.status);
-      } catch (e) {
-        console.warn('[App] 加载章节失败，使用内置备用数据');
-        this.chapters = FALLBACK_CHAPTERS;
+    
+    // 加载题目：优先用 questions.json，失败则fallback到config.js内置的QUESTIONS
+    try {
+      const res = await fetch('./data/questions.json');
+      console.log('📥 尝试加载 questions.json，响应状态:', res.status, 'ok:', res.ok);
+      if (res.ok) {
+        this.questions = await res.json();
+        console.log('✅ questions.json 加载成功，共', this.questions.length, '道题');
+      } else {
+        throw new Error('fetch questions failed: ' + res.status);
       }
-
-      try {
-        const res = await fetch('./data/questions.json');
-        if (res.ok) {
-          this.questions = await res.json();
-          this.dataSource = 'local';
-        } else throw new Error('fetch questions failed: ' + res.status);
-      } catch (e) {
-        console.warn('[App] 加载题目失败，使用内置数据');
-        if (typeof QUESTIONS !== 'undefined' && QUESTIONS && Array.isArray(QUESTIONS) && QUESTIONS.length > 0) {
-          this.questions = QUESTIONS;
-        } else if (typeof FALLBACK_QUESTIONS !== 'undefined' && FALLBACK_QUESTIONS && FALLBACK_QUESTIONS.length > 0) {
+    } catch (e) {
+      console.warn('❌ questions.json 加载失败，尝试使用内置QUESTIONS:', e.message);
+      console.log('🔍 检查内置QUESTIONS:', typeof QUESTIONS, QUESTIONS);
+      
+      // fallback: 使用 config.js 里内置的 QUESTIONS 数组
+      if (typeof QUESTIONS !== 'undefined' && QUESTIONS && Array.isArray(QUESTIONS) && QUESTIONS.length > 0) {
+        this.questions = QUESTIONS;
+        console.log('✅ 使用内置QUESTIONS数据，共', this.questions.length, '道题');
+        console.log('📋 第一题:', this.questions[0]);
+      } else if (typeof QUESTIONS !== 'undefined' && QUESTIONS && typeof QUESTIONS.length === 'number') {
+        console.warn('⚠️ QUESTIONS存在但长度为0或不是数组');
+        this.questions = [];
+      } else {
+        console.error('❌ 内置QUESTIONS未定义或为空');
+        // 最后尝试使用 FALLBACK_QUESTIONS（如果存在）
+        if (typeof FALLBACK_QUESTIONS !== 'undefined' && FALLBACK_QUESTIONS && Array.isArray(FALLBACK_QUESTIONS) && FALLBACK_QUESTIONS.length > 0) {
           this.questions = FALLBACK_QUESTIONS;
+          console.log('✅ 使用FALLBACK_QUESTIONS数据，共', this.questions.length, '道题');
         } else {
           this.questions = [];
         }
-        this.dataSource = 'fallback';
       }
     }
-
     this.currentFilteredQuestions = [...this.questions];
+    console.log('📚 当前题目数量:', this.questions.length);
   },
 
   showView(viewId) {
-    Utils.showLoading(true, '加载中…');
+    Utils.showLoading(true, '加载中...');
     setTimeout(() => {
       document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
       const target = document.getElementById('view-' + viewId);
@@ -125,8 +120,8 @@ const App = {
       }
       if (viewId === 'all') { this.currentFilteredQuestions = [...this.questions]; if (document.getElementById('searchInput')) document.getElementById('searchInput').value = ''; }
       window.scrollTo(0, 0);
-      setTimeout(() => { MathRender.renderVisible(); MathRender.observe(); ScrollReveal.init(); Utils.showLoading(false); }, 300);
-    }, 150);
+      setTimeout(() => { MathRender.renderVisible(); MathRender.observe(); Utils.showLoading(false); }, 300);
+    }, 200);
   },
 
   renderAll() {
@@ -147,12 +142,12 @@ const App = {
     a.download = `刷题备份_${Utils.getTodayKey()}.json`;
     a.click();
     URL.revokeObjectURL(url);
-    Utils.showToast(`${Icons.get('download', 'sm')} JSON 备份已导出`);
+    Utils.showToast('📤 JSON 备份已导出');
   },
 
   importJsonData(file) {
     if (!file) return;
-    Utils.showLoading(true, '导入 JSON…');
+    Utils.showLoading(true, '导入 JSON...');
     const reader = new FileReader();
     reader.onload = ev => {
       try {
@@ -177,12 +172,12 @@ const App = {
         if (imported.bgmBase64) { current.bgmBase64 = imported.bgmBase64; AudioMgr.playBgm(imported.bgmBase64); }
         Storage.saveLocalData(current);
         Sync.debounceSync(current);
-        Utils.showToast(`${Icons.get('check-circle-2', 'sm')} JSON 导入成功`);
+        Utils.showToast('✅ JSON 导入成功！');
         this.renderAll();
         Utils.showLoading(false);
       } catch (err) {
         Utils.showLoading(false);
-        Utils.showToast(`${Icons.get('alert-circle', 'sm')} JSON 文件无效: ${err.message}`);
+        Utils.showToast('❌ JSON 文件无效: ' + err.message);
       }
     };
     reader.readAsText(file);
@@ -197,7 +192,7 @@ function acceptWelcome() {
     App.renderAll();
     AudioMgr.restoreSounds().then(() => AudioMgr.restoreBgm());
     WrongbookUI.updateBadge();
-    setTimeout(() => { MathRender.renderVisible(); MathRender.observe(); ScrollReveal.init(); }, 1000);
+    setTimeout(() => { MathRender.renderVisible(); MathRender.observe(); }, 1000);
   });
 }
 
@@ -205,7 +200,7 @@ function rejectWelcome() {
   const box = document.querySelector('#welcome-modal .modal-box');
   if (box) {
     box.innerHTML = `
-      <h2>${Icons.get('alert-triangle', 'lg')}需要同意才能使用</h2>
+      <h2>⚠️ 需要同意才能使用</h2>
       <p>得开本地存储才能存做题记录，刷新页面可以重新选。</p>
       <div class="modal-actions">
         <button class="btn-agree" onclick="location.reload()">刷新并同意</button>
@@ -220,5 +215,6 @@ function showGridZen() {
 }
 
 document.addEventListener('DOMContentLoaded', () => {
-  Auth.checkAndInit();
-});
+    // 先检查登录状态
+    Auth.checkAndInit();
+  });

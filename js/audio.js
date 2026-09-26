@@ -31,7 +31,7 @@ const AudioMgr = {
     if (!file) return;
     const size = file.size;
     if (size > CONFIG.MAX_AUDIO_PLAY_SIZE) {
-      Utils.showToast(`${Icons.get('alert-triangle', 'sm')} 音效文件超过2MB，无法使用`); return;
+      Utils.showToast('音效文件超过2MB，无法使用'); return;
     }
     const base64 = await this.fileToBase64(file);
     const audio = this.audioFromBase64(base64);
@@ -45,20 +45,20 @@ const AudioMgr = {
       else { data.wrongBase64 = base64; this.wrongSound = audio; }
       Storage.saveLocalData(data);
       if (statusEl) statusEl.textContent = name + ' (已同步)';
-      Utils.showToast(`${Icons.get('check-circle-2', 'sm')} 音效已保存（本地+云端）`);
+      Utils.showToast('✅ 音效已保存（本地+云端）');
     } else if (size <= CONFIG.MAX_AUDIO_INDEXED_SIZE) {
       // 存 IndexedDB（本地）
       await Storage.saveAudio(type + 'Sound', base64);
       if (type === 'correct') this.correctSound = audio;
       else this.wrongSound = audio;
       if (statusEl) statusEl.textContent = name + ' (本地DB)';
-      Utils.showToast(`${Icons.get('check-circle-2', 'sm')} 音效已保存（IndexedDB）`);
+      Utils.showToast('✅ 音效已保存（IndexedDB）');
     } else {
       // 仅内存播放
       if (type === 'correct') this.correctSound = audio;
       else this.wrongSound = audio;
       if (statusEl) statusEl.textContent = name + ' (临时)';
-      Utils.showToast(`${Icons.get('alert-triangle', 'sm')} 音效 >500KB，仅播放不存储`);
+      Utils.showToast('音效 >500KB，仅播放不存储');
     }
   },
 
@@ -157,7 +157,7 @@ const AudioMgr = {
     this.playBgm(url);
     const status = document.getElementById('bgmFileStatus');
     if (size > CONFIG.MAX_AUDIO_PLAY_SIZE) {
-      Utils.showToast(`${Icons.get('alert-triangle', 'sm')} 音乐 >2MB，无法使用`);
+      Utils.showToast('🎵 音乐 >2MB，无法使用');
       if (status) status.textContent = file.name + ' (过大)';
       return;
     }
@@ -167,14 +167,14 @@ const AudioMgr = {
       data.bgmBase64 = base64;
       Storage.saveLocalData(data);
       if (status) status.textContent = file.name + ' (已同步)';
-      Utils.showToast(`${Icons.get('check-circle-2', 'sm')} 音乐已保存（本地+云端）`);
+      Utils.showToast('🎵 音乐已保存（本地+云端）');
     } else if (size <= CONFIG.MAX_AUDIO_INDEXED_SIZE) {
       await Storage.saveAudio('bgm', base64);
       if (status) status.textContent = file.name + ' (本地DB)';
-      Utils.showToast(`${Icons.get('check-circle-2', 'sm')} 音乐已保存（IndexedDB）`);
+      Utils.showToast('🎵 音乐已保存（IndexedDB）');
     } else {
       if (status) status.textContent = file.name + ' (临时)';
-      Utils.showToast(`${Icons.get('alert-triangle', 'sm')} 音乐 >500KB，仅播放不存储`);
+      Utils.showToast('🎵 音乐 >500KB，仅播放不存储');
     }
     this.playBgm(base64);
   },

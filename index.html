@@ -2,12 +2,8 @@
 <html lang="zh-CN">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="高中数学刷题本 — 极简设计，本地存储，云端同步">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>高中数学刷题本</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="css/style.css">
   <script>
     window.MathJax = {
@@ -24,14 +20,12 @@
     })();
   </script>
   <script src="https://cdn.jsdelivr.net/npm/lz-string@1.5.0/libs/lz-string.min.js"></script>
-  <script src="js/icons.js"></script>
   <script src="js/config.js"></script>
   <script src="js/utils.js"></script>
   <script src="js/storage.js"></script>
   <script src="js/audio.js"></script>
   <script src="js/timer.js"></script>
   <script src="js/math-render.js"></script>
-  <script src="js/scroll-reveal.js"></script>
   <script src="js/sync.js"></script>
   <script src="js/auth.js"></script>
   <script src="js/ui/menu.js"></script>
@@ -45,15 +39,13 @@
   <div id="progress-container"><div id="progress-bar"></div></div>
   <div id="loading-overlay">
     <div class="spinner"></div>
-    <span id="loading-text">加载中…</span>
+    <span id="loading-text">加载中...</span>
   </div>
-
-  <!-- Welcome Modal -->
   <div id="welcome-modal">
     <div class="modal-box">
-      <h2><span class="icon icon-lg"><script>document.write(Icons.svg('book-open',20))</script></span>欢迎使用刷题本</h2>
+      <h2>📚 欢迎使用刷题本</h2>
       <p>做题记录存在你自己的浏览器里，不会丢，还能同步到云端。</p>
-      <p><small><span class="icon icon-sm"><script>document.write(Icons.svg('lightbulb',14))</script></span> 点一下选项就能看到<b>答案和解析</b></small></p>
+      <p><small>💡 点一下选项就能看到<b>答案和解析</b></small></p>
       <div class="checkbox-row">
         <input type="checkbox" id="dontShowWelcome">
         <label for="dontShowWelcome">不再显示</label>
@@ -64,17 +56,11 @@
       </div>
     </div>
   </div>
-
-  <!-- Support Modal -->
   <div id="support-modal">
     <div class="modal-box">
-      <h3><span class="icon icon-md"><script>document.write(Icons.svg('heart',16))</script></span> 支持作者</h3>
-      <a href="https://chat.deepseek.com" target="_blank" class="support-link">
-        <span class="icon icon-md"><script>document.write(Icons.svg('bot',16))</script></span> DeepSeek 聊天
-      </a>
-      <a href="https://platform.deepseek.com" target="_blank" class="support-link">
-        <span class="icon icon-md"><script>document.write(Icons.svg('credit-card',16))</script></span> DeepSeek 打赏
-      </a>
+      <h3>💖 支持作者</h3>
+      <a href="https://chat.deepseek.com" target="_blank" class="support-link">🤖 DeepSeek 聊天</a>
+      <a href="https://platform.deepseek.com" target="_blank" class="support-link">💳 DeepSeek 打赏</a>
       <div id="gridzen-placeholder" style="display:none; margin-top:10px;">
         <img src="./js/ui/l.png" alt="GridZen" class="support-img" style="max-width:100%;">
         <p>感谢支持</p>
@@ -82,97 +68,69 @@
       <button class="close-btn" onclick="document.getElementById('support-modal').style.display='none'">关闭</button>
     </div>
   </div>
-
   <div id="toast" class="toast"></div>
-
-  <!-- Top Navigation -->
   <nav class="top-nav" id="topNav">
-    <button class="active" data-view="menu"><span class="icon icon-md"><script>document.write(Icons.svg('list',16))</script></span>目录</button>
-    <button data-view="all"><span class="icon icon-md"><script>document.write(Icons.svg('file-text',16))</script></span>全部</button>
-    <button data-view="wrong"><span class="icon icon-md"><script>document.write(Icons.svg('x-circle',16))</script></span>错题<span class="badge" id="wrong-badge" style="display:none;">0</span></button>
-    <button data-view="stats"><span class="icon icon-md"><script>document.write(Icons.svg('bar-chart-3',16))</script></span>统计</button>
-    <button data-view="settings"><span class="icon icon-md"><script>document.write(Icons.svg('settings',16))</script></span>设置</button>
+    <button class="active" data-view="menu">📑 目录</button>
+    <button data-view="all">📝 全部</button>
+    <button data-view="wrong">❌ 错题<span class="badge" id="wrong-badge" style="display:none;">0</span></button>
+    <button data-view="stats">📊 统计</button>
+    <button data-view="settings">⚙️ 设置</button>
   </nav>
-
   <main>
-    <!-- Menu View -->
     <section id="view-menu" class="view active">
-      <h2 class="menu-title reveal"><span class="icon icon-lg"><script>document.write(Icons.svg('book-open',20))</script></span>选择章节开始刷题</h2>
+      <h2 class="menu-title">📚 选择章节开始刷题</h2>
       <div id="menu-list"></div>
     </section>
-
-    <!-- All Questions View -->
     <section id="view-all" class="view">
-      <div class="search-bar reveal">
-        <div class="search-wrap">
-          <span class="icon icon-md"><script>document.write(Icons.svg('search',16))</script></span>
-          <input type="text" id="searchInput" placeholder="搜索题目…">
-        </div>
-        <button class="btn-random" onclick="QuestionsUI.random()">
-          <span class="icon icon-md"><script>document.write(Icons.svg('shuffle',16))</script></span>随机一题
-        </button>
+      <div class="search-bar">
+        <input type="text" id="searchInput" placeholder="🔍 搜索题目...">
+        <button class="btn-random" onclick="QuestionsUI.random()">🎲 随机一题</button>
       </div>
       <div id="all-list"></div>
     </section>
-
-    <!-- Wrong Book View -->
     <section id="view-wrong" class="view">
-      <div class="wrong-filter reveal">
+      <div class="wrong-filter">
         <button class="wf-btn active" data-filter="all">全部错题</button>
         <button class="wf-btn" data-filter="week">近7天</button>
         <button class="wf-btn" data-filter="high">高频错题</button>
-        <button class="clear-btn" id="clearWrongsBtn">
-          <span class="icon icon-sm"><script>document.write(Icons.svg('trash-2',14))</script></span>清空
-        </button>
+        <button class="clear-btn" id="clearWrongsBtn">🗑️ 清空</button>
       </div>
       <div id="wrong-list"></div>
     </section>
-
-    <!-- Stats View -->
     <section id="view-stats" class="view">
-      <h2 class="menu-title reveal"><span class="icon icon-lg"><script>document.write(Icons.svg('bar-chart-3',20))</script></span>刷题数据统计</h2>
-      <div class="stats-bar reveal">
+      <h2 class="menu-title">📊 刷题数据统计</h2>
+      <div class="stats-bar">
         <div class="stats-item"><div class="num" id="stat-total">0</div><div class="label">总题数</div></div>
         <div class="stats-item"><div class="num" id="stat-done">0</div><div class="label">已完成</div></div>
         <div class="stats-item"><div class="num" id="stat-wrong">0</div><div class="label">错题数</div></div>
         <div class="stats-item"><div class="num" id="stat-rate">0%</div><div class="label">正确率</div></div>
       </div>
-      <div class="daily-stats reveal">
-        <h3><span class="icon icon-md"><script>document.write(Icons.svg('calendar',16))</script></span>每日做题记录</h3>
+      <div class="daily-stats">
+        <h3>📅 每日做题记录</h3>
         <div id="daily-stats-content">暂无数据</div>
       </div>
     </section>
-
-    <!-- Settings View -->
     <section id="view-settings" class="view">
-      <h2 class="menu-title reveal"><span class="icon icon-lg"><script>document.write(Icons.svg('settings',20))</script></span>设置</h2>
-      <div class="settings-card reveal">
+      <h2 class="menu-title">⚙️ 设置</h2>
+      <div class="settings-card">
         <div class="setting-item">
-          <span class="setting-label"><span class="icon icon-md"><script>document.write(Icons.svg('moon',16))</script></span>夜间模式</span>
+          <span class="setting-label">🌙 夜间模式</span>
           <label class="switch"><input type="checkbox" id="darkModeToggle"><span class="slider"></span></label>
         </div>
         <div class="setting-item">
-          <span class="setting-label"><span class="icon icon-md"><script>document.write(Icons.svg('volume-2',16))</script></span>音效音量</span>
+          <span class="setting-label">🔊 音效音量</span>
           <input type="range" id="soundVolumeSlider" min="0" max="100" value="80" class="volume-slider">
-          <span id="soundVolumeLabel" style="font-family:var(--font-mono);font-size:12px;color:var(--text-secondary);min-width:36px;text-align:right;">80%</span>
+          <span id="soundVolumeLabel">80%</span>
         </div>
         <div class="setting-item">
-          <span class="setting-label"><span class="icon icon-md"><script>document.write(Icons.svg('music',16))</script></span>背景音乐音量</span>
+          <span class="setting-label">🎵 背景音乐音量</span>
           <input type="range" id="bgmVolumeSlider" min="0" max="100" value="50" class="volume-slider">
-          <span id="bgmVolumeLabel" style="font-family:var(--font-mono);font-size:12px;color:var(--text-secondary);min-width:36px;text-align:right;">50%</span>
+          <span id="bgmVolumeLabel">50%</span>
         </div>
+        <div class="setting-item"><span class="setting-label">🔊 答对音效</span><input type="file" id="correctSoundFile" accept="audio/*"><span class="file-status" id="correctSoundStatus">未选择</span></div>
+        <div class="setting-item"><span class="setting-label">🔊 答错音效</span><input type="file" id="wrongSoundFile" accept="audio/*"><span class="file-status" id="wrongSoundStatus">未选择</span></div>
         <div class="setting-item">
-          <span class="setting-label"><span class="icon icon-md"><script>document.write(Icons.svg('volume-2',16))</script></span>答对音效</span>
-          <input type="file" id="correctSoundFile" accept="audio/*">
-          <span class="file-status" id="correctSoundStatus">未选择</span>
-        </div>
-        <div class="setting-item">
-          <span class="setting-label"><span class="icon icon-md"><script>document.write(Icons.svg('volume-2',16))</script></span>答错音效</span>
-          <input type="file" id="wrongSoundFile" accept="audio/*">
-          <span class="file-status" id="wrongSoundStatus">未选择</span>
-        </div>
-        <div class="setting-item">
-          <span class="setting-label"><span class="icon icon-md"><script>document.write(Icons.svg('music',16))</script></span>背景音乐</span>
+          <span class="setting-label">🎵 背景音乐</span>
           <select id="bgmSelect">
             <option value="off">关闭</option>
             <option value="url">在线 URL</option>
@@ -189,46 +147,42 @@
           <input type="file" id="bgmFileInput" accept="audio/*">
           <span class="file-status" id="bgmFileStatus">未选择</span>
         </div>
-        <div class="setting-item">
-          <span class="setting-label"><span class="icon icon-md"><script>document.write(Icons.svg('mic',16))</script></span>语音反馈</span>
+        <div class="setting-item" style="border-bottom:1px solid var(--divider); padding-bottom:12px;">
+          <span class="setting-label">🗣️ 语音反馈</span>
           <label class="switch"><input type="checkbox" id="voiceToggle" checked><span class="slider"></span></label>
         </div>
-        <div class="setting-item" style="flex-direction:column; align-items:stretch;">
-          <span class="setting-label" style="margin-bottom:8px;"><span class="icon icon-md"><script>document.write(Icons.svg('cloud',16))</script></span>云端同步</span>
+        <div class="setting-item" style="flex-direction:column; align-items:stretch; border-bottom:1px solid var(--divider); padding-bottom:15px;">
+          <span class="setting-label" style="margin-bottom:8px;">☁️ 云端同步</span>
           <div style="display:flex; gap:8px; flex-wrap:wrap;">
-            <button class="small-btn" id="syncCloudBtn"><span class="icon icon-sm"><script>document.write(Icons.svg('upload',14))</script></span>同步到云端</button>
-            <button class="small-btn secondary" id="loadCloudBtn"><span class="icon icon-sm"><script>document.write(Icons.svg('download',14))</script></span>从云端读取</button>
+            <button class="small-btn" id="syncCloudBtn" style="background:#28a745;">📤 同步到云端</button>
+            <button class="small-btn" id="loadCloudBtn" style="background:#17a2b8;">📥 从云端读取</button>
           </div>
-          <div class="setting-hint">使用 GitHub Gist 免费存储，通过本地代理安全同步</div>
-          <div id="sync-status-container"></div>
+          <div style="font-size:12px; color:#888; margin-top:8px;">使用 GitHub Gist 免费存储，自动同步</div>
         </div>
-        <div class="setting-item" style="flex-direction:column; align-items:stretch;">
-          <span class="setting-label" style="margin-bottom:8px;"><span class="icon icon-md"><script>document.write(Icons.svg('download',16))</script></span>导出 JSON 备份</span>
+        <div class="setting-item" style="flex-direction:column; align-items:stretch; border-bottom:1px solid var(--divider); padding-bottom:15px;">
+          <span class="setting-label" style="margin-bottom:8px;">📤 导出 JSON 备份</span>
           <button class="small-btn" id="exportJsonBtn">导出数据</button>
         </div>
-        <div class="setting-item" style="flex-direction:column; align-items:stretch;">
-          <span class="setting-label" style="margin-bottom:8px;"><span class="icon icon-md"><script>document.write(Icons.svg('key',16))</script></span>恢复码</span>
-          <textarea id="code-input" placeholder="在此粘贴恢复码…" style="width:100%; height:60px; padding:10px; border-radius:var(--radius-sm); border:1px solid var(--input-border); background:var(--input-bg); color:var(--text); font-family:var(--font-mono); font-size:12px; resize:vertical; outline:none;"></textarea>
+        <div class="setting-item" style="flex-direction:column; align-items:stretch; border-bottom:1px solid var(--divider); padding-bottom:15px;">
+          <span class="setting-label" style="margin-bottom:8px;">🔑 恢复码</span>
+          <textarea id="code-input" placeholder="在此粘贴恢复码..." style="width:100%; height:60px; padding:10px; border-radius:5px; border:2px solid var(--input-border); background:var(--input-bg); color:var(--text); font-family:monospace;"></textarea>
           <div style="display:flex; gap:8px; margin-top:8px;">
-            <button class="small-btn" id="importCodeBtn"><span class="icon icon-sm"><script>document.write(Icons.svg('download',14))</script></span>导入</button>
-            <button class="small-btn secondary" id="exportCodeBtn"><span class="icon icon-sm"><script>document.write(Icons.svg('copy',14))</script></span>生成并复制</button>
+            <button class="small-btn" id="importCodeBtn">📥 导入</button>
+            <button class="small-btn secondary" id="exportCodeBtn">📋 生成并复制</button>
           </div>
         </div>
-        <div class="setting-item">
-          <span class="setting-label"><span class="icon icon-md"><script>document.write(Icons.svg('mail',16))</script></span>联系我们</span>
-          <a href="mailto:lzy45400@gmail.com">lzy45400@gmail.com</a>
+        <div class="setting-item" style="border-bottom:1px solid var(--divider); padding-bottom:12px;">
+          <span class="setting-label">📧 联系我们</span>
+          <a href="mailto:lzy45400@gmail.com" style="color:var(--accent);">lzy45400@gmail.com</a>
         </div>
       </div>
     </section>
   </main>
-
-  <!-- FAB Timer -->
-  <div id="fab-timer" class="fab-timer" title="单击：开始/暂停 · 长按：导出备份">
-    <div class="fab-icon"><span class="icon icon-sm" style="color:#fff;"><script>document.write(Icons.svg('timer',14))</script></span></div>
+  <div id="fab-timer" class="fab-timer" title="单击：开始/暂停">
+    <div style="font-size:16px;">⏱️</div>
     <div class="time" id="timerDisplay">00:00</div>
     <div class="status" id="timerStatus">待命</div>
   </div>
-
-  <footer>© 2026 <a href="https://gzxxw.github.io">gzxxw.github.io</a> · 高中数学刷题本</footer>
+  <footer>© 2026 <a href="https://gzxxw.github.io" style="color:inherit;">gzxxw.github.io</a> · 高中数学刷题本</footer>
 </body>
 </html>
